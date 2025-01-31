@@ -1,0 +1,13 @@
+#/user/bin/env bash
+
+SCRIPT_DIR=`dirname $(realpath "$0")`
+cd $SCRIPT_DIR/..
+
+path="$2"
+name=$(basename $2)
+target=${name%.*}
+cmd="$1 $target"
+
+echo "running $cmd on changes...\n\n"
+ag -l . | entr $cmd
+echo "\n\n...stopping watching"
