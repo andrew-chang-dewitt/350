@@ -159,7 +159,12 @@ TEST_MAIN
 // TODO: define these now so that tests will get registered & their bodies will be called by Node->exec()
 
 // replace test w/ function that registers test onto an object
-// #define TEST(name) void
+#define TEST(name)\
+  // create (anonymous?) fn
+  // register in root
+  // HOWTO attach assertion defeined w/in {}?
+  // - maybe as a 2nd arg to the macro?
+  // - and that 2nd arg can be a macro call that resolves to a fn ptr?
 
 // #define ASSERT(ast) \
 //   do { \
