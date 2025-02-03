@@ -34,9 +34,9 @@ void add_thing(struct thing *new) {
 // #define printname() printf("%s", n);
 //
 // reg(first, {printname()})
-char *n = "first";
-void first_fn() { printf("%s", n); }
-struct thing first = {.name = "first", .next = 0, .fn = &first_fn};
+// char *n = "first";
+// void first_fn() { printf("%s", n); }
+// struct thing first = {.name = "first", .next = 0, .fn = &first_fn};
 // maybe there's something in the idea of each test is prepended to the llist,
 // updating the head each time?
 
