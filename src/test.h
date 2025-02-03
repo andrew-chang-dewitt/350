@@ -56,7 +56,6 @@ struct Node {
   struct Node *next;
   struct Node *prev;
   TestResult (*exec)();
-  int line;
   char *file;
   char *name;
 };
@@ -147,7 +146,7 @@ static int run(struct List *tests, struct Report *report) {
 #define TEST_MAIN                                                              \
   int main(int _, char **__) {                                                 \
     printf("\n\n[test.h] Running tests...\n\n");                               \
-    int exit = run(&root, &report);                                                     \
+    int exit = run(&root, &report);                                            \
     printf("Done.\n");                                                         \
     return exit;                                                               \
   }
@@ -159,14 +158,22 @@ TEST_MAIN
 // TODO: define these now so that tests will get registered & their bodies will be called by Node->exec()
 
 // replace test w/ function that registers test onto an object
-#define TEST(name)\
-  // create (anonymous?) fn
-  // register in root
-  // HOWTO attach assertion defeined w/in {}?
-  // - maybe as a 2nd arg to the macro?
-  // - and that 2nd arg can be a macro call that resolves to a fn ptr?
+// struct Node {
+//   struct Node *next;
+//   struct Node *prev;
+//   TestResult (*exec)();
+//   char *file;
+//   char *name;
+// };
+#define TEST(name, fn)                                                         \
+  _list_append(&root, {                                                        \
+    .name=name,                                                                \
+    .exec=fn,                                                                  \
+    .file=__FILE__,                                                            \
+  })
 
-// #define ASSERT(ast) \
+#define ASSERT(ast) \
+  // TODO: need to somehow give an id to this function? not sure what to do...
 //   do { \
 //     assertion = #ast; \
 //     file = __FILE__; \
