@@ -2,8 +2,7 @@
 
 #ifdef CMP_TST
 #define TEST_IMPL_WITH_MAIN
-#include "test.h"
-
+#include "ctest/lib.h"
 #else
 
 int main(void) {
