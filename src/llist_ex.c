@@ -1,26 +1,29 @@
 #include <stdio.h>
 
-#include "llist.h"
+#include "llist.c"
 
 #ifndef Vec_int
 declare_vec(int)
 #endif
 
+    void print_int(int *i) {
+  printf("%d, ", *i);
+}
+
 typedef struct {
   char *name;
 } Thing;
-
-void free_thing(Thing *thing) {
-  free(thing->name);
-}
 
 #ifndef Vec_Thing
 declare_vec(Thing)
 #endif
 
+    void print_thing(Thing *t) {
+  printf("Thing {.name = %s}, ", t->name);
+}
 
-int main(int argc, char* argv[argc + 1]) {
-  Vec_int int_vec = vec_new(int);
+int main(int argc, char *argv[argc + 1]) {
+  Vec_int int_vec = vec_new(int, NULL);
 
   int_vec.vtable->append(&int_vec, 0);
   int_vec.vtable->append(&int_vec, 1);
@@ -35,31 +38,30 @@ int main(int argc, char* argv[argc + 1]) {
 
   printf("int_vec is %d long\n", int_vec.len);
 
-  __Node_int *next_int = int_vec._head;
   printf("int_vec: [");
-  while(next_int) {
-    printf("%d,", next_int->_value);
-    next_int = next_int->_next;
-  }
+
+  Iterable_int int_iter = int_vec.vtable->iter(&int_vec);
+  int_iter.vtable->for_each(&int_iter, &print_int);
+
   printf("]\n\n");
 
-  Vec_Thing thing_vec = vec_new_with_free(Thing, &free_thing);
+  Vec_Thing thing_vec = vec_new(Thing, NULL);
 
-  thing_vec.vtable->append(&thing_vec, (Thing){.name="bob"});
-  //thing_vec.vtable->append(&thing_vec, (Thing){.name="jon"});
+  thing_vec.vtable->append(&thing_vec, (Thing){.name = "bob"});
+  thing_vec.vtable->append(&thing_vec, (Thing){.name = "jon"});
 
-  //thing_vec.vtable->prepend(&thing_vec, (Thing){.name="sue"});
+  thing_vec.vtable->prepend(&thing_vec, (Thing){.name = "sue"});
 
   printf("thing_vec is %d long\n", thing_vec.len);
 
-  __Node_Thing *next_thing = thing_vec._head;
   printf("thing_vec: [");
-  while(next_thing) {
-    printf("Thing { .name = %s },", next_thing->_value.name);
-    next_thing = next_thing->_next;
-  }
+
+  Iterable_Thing thing_iter = thing_vec.vtable->iter(&thing_vec);
+  thing_iter.vtable->for_each(&thing_iter, &print_thing);
+
   printf("]\n\n");
 
-
   thing_vec.vtable->destroy(thing_vec);
+
+  printf("done.\n\n\n");
 }
