@@ -1,3 +1,8 @@
+#include "../macros/concat.c"
+#include "../macros/defer.c"
+#include "../macros/echo.c"
+#include "../macros/for_each.c"
+
 #include "lib.h"
 
 static void exec_test(Test *test, Report *report) {
@@ -27,19 +32,24 @@ static int run(Vec_Test *tests, Report *report) {
   return 0;
 }
 
-// TODO: playing with having the SUITE macro expand to a main fn that builds
-// the `tests` vec in place from the Test objs created by each TEST macro
-// thinking it could be done by having SUITE iterate over __VA_ARGS__,
-// declaring a function for the BODY given to each TEST & creating a Test
-// object that receives a pointer to that function, then appending that Test
-// object to the `tests` vec each time.
+#define _create_test_fn(num, desc)                                             \
+  char *ECHO(CONCAT(_desc_test, num)) = desc;                                  \
+  TestResult ECHO(CONCAT(_fn_test, num))()
+
+#define _
+
+#define TEST(desc, body) _create_test_fn(__COUNTER__, desc)
+
 #ifdef TEST_IMPL_WITH_MAIN
-/*
-#define SUITE(name, ...)                                                       \
- */
-#define SUITE(name)                                                            \
+#define SUITE(desc, ...)                                                       \
+  /*create test functions from args*/                                          \
+  FOR_EACH(ECHO, __VA_ARGS__)                                                  \
+  /*test main fn that runs given test functions*/                              \
   int main(int _, char **__) {                                                 \
     Vec_Test tests = vec_new(Test, NULL);                                      \
+    /*                                                                         \
+    FOR_EACH(_append_test_to_vec, __VA_ARGS__)                                 \
+     */                                                                        \
     Report report = {.pass = 0, .failures = vec_new(Failure, NULL)};           \
     printf("\n\n[ctest] Running tests...\n\n");                                \
     int exit = run(&tests, &report);                                           \
