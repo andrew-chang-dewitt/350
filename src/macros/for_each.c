@@ -1,3 +1,34 @@
+/* FOR_EACH(macro, ...)
+ * --------------------
+ * A macro (& necessary children) for calling a given `macro` over a given list
+ * of arguments (accessed via __VA_ARGS__). Max number of args to iterate over
+ * is limited by the number of args specified/macros defined in aforementioned
+ * necessary children, currently at 100, but could be changed.
+ *
+ * Usage:
+ *
+ * ```c
+ * #define PRINTLN(msg) printf("%s\n", msg);
+ * FOR_EACH(PRINTLN, "this prints multiple messages", "I can give it a bunch",
+ *          "& it will print each on", "their own line", "because why not?")
+ * ```
+ *
+ * which outputs:
+ *
+ * ```
+ * this prints multiple messages
+ * I can give it a bunch
+ * & it will print each on
+ * their own line
+ * because why not?
+ * ```
+ *
+ * largely informed by Daniel Hardman's [blog post][1] & [gist][2] on the topic.
+ *
+ * [1]: https://codecraft.co/variadic-macros-tricks.html
+ * [2]: https://gist.github.com/dhh1128/d1dd24b492819c65f1e1
+ */
+
 #ifndef FOR_EACH
 
 /* _GET_NTH_ARG
