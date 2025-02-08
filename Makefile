@@ -11,7 +11,6 @@ SRCS    := $(wildcard $(SRC_DIR)/*.c)
 OBJS    := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 RUN     := $(patsubst $(SRC_DIR)/%.c,%,$(SRCS))
 TDEPS   := $(DEPS) $(SRC_DIR)/ctest/lib.h $(SRC_DIR)/ctest/main.c
-#TDEPS   := $(DEPS) $(SRC_DIR)/test.c
 TOBJS   := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/test_%.o,$(SRCS))
 TRUN    := $(patsubst %,test_%,$(RUN))
 

@@ -7,17 +7,17 @@
 #include "../llist.h"
 #include "../result.h"
 
-typedef struct Empty {
+typedef struct {
 } Empty;
 
-struct Failure {
+typedef struct {
   char *test;
   char *assertion;
   char *file;
   int line;
-};
+} Failure;
 
-DEFINE_RESULT(Empty, struct Failure, TestResult)
+DEFINE_RESULT(Empty, Failure, TestResult)
 
 typedef struct {
   char *name;
@@ -27,16 +27,12 @@ typedef struct {
 
 declare_vec(Test);
 
-#ifdef TEST_IMPL_WITH_MAIN
-#include "main.c"
-#endif
+declare_vec(Failure);
 
-// declare_vec(Failure);
-//
-// struct Report {
-//   int pass;
-//   struct Vec_Failure failures;
-// };
+typedef struct {
+  int pass;
+  Vec_Failure failures;
+} Report;
 
 // // TODO: define these now so that tests will get registered & their bodies
 // will
@@ -70,4 +66,8 @@ declare_vec(Test);
 // //       putchar('F'); \
 // //     } \
 // //   } while (0)
+
+#ifdef TEST_IMPL_WITH_MAIN
+#include "main.c"
+#endif
 #endif
